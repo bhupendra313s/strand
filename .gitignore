@@ -1,0 +1,17 @@
+# .NET
+bin/
+obj/
+*.user
+.vs/
+# Android / Gradle
+.gradle/
+build/
+local.properties
+.idea/
+*.iml
+captures/
+# Release outputs (attached to GitHub Releases, not committed)
+dist/
+# Not part of Strand
+research/
+*.zip

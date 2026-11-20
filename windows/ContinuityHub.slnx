@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="ContinuityHub.Tests/ContinuityHub.Tests.csproj" />
+  <Project Path="ContinuityHub/ContinuityHub.csproj" />
+</Solution>

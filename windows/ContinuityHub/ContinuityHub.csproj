@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <NoWarn>$(NoWarn);WPF0001</NoWarn>
+    <StartupObject>ContinuityHub.Program</StartupObject>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+    <RootNamespace>ContinuityHub</RootNamespace>
+    <AssemblyName>ContinuityHub</AssemblyName>
+    <Version>0.3.0</Version>
+    <ApplicationIcon>Assets\strand.ico</ApplicationIcon>
+    <Product>Strand</Product>
+    <AssemblyTitle>Strand</AssemblyTitle>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="QRCoder" Version="1.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="ContinuityHub.Tests" />
+  </ItemGroup>
+
+</Project>

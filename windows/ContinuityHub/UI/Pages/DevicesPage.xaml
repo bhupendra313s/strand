@@ -1,0 +1,160 @@
+<UserControl x:Class="ContinuityHub.UI.Pages.DevicesPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="clr-namespace:ContinuityHub.UI">
+    <UserControl.Resources>
+        <ui:InverseBoolToVisConverter x:Key="InvVis" />
+    </UserControl.Resources>
+    <StackPanel>
+        <DockPanel>
+            <Button DockPanel.Dock="Right" Command="{Binding Pairing.StartCommand}" Style="{DynamicResource AccentButtonStyle}" Padding="14,6"
+                    VerticalAlignment="Top" Visibility="{Binding Pairing.IsActive, Converter={StaticResource InvVis}}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="&#xE710;" Style="{StaticResource Icon}" FontSize="12" Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}" Margin="0,0,8,0" />
+                    <TextBlock Text="Pair a new phone" />
+                </StackPanel>
+            </Button>
+            <StackPanel>
+                <TextBlock Text="Devices" Style="{StaticResource PageTitle}" />
+                <TextBlock Text="Phones paired with this PC. Pairing uses a one-time QR code and locks the phone to this PC's certificate." Style="{StaticResource PageSubtitle}" />
+            </StackPanel>
+        </DockPanel>
+
+        <!-- ================= success -->
+        <Border Style="{StaticResource Card}" Padding="24" Margin="0,0,0,16"
+                Visibility="{Binding Pairing.IsPaired, Converter={StaticResource BoolToVis}}"
+                Background="{DynamicResource SystemFillColorSuccessBackgroundBrush}">
+            <DockPanel>
+                <Button DockPanel.Dock="Right" Content="Done" Command="{Binding Pairing.DoneCommand}" VerticalAlignment="Center" />
+                <Border Width="44" Height="44" CornerRadius="22" Background="{DynamicResource AccentFillColorDefaultBrush}">
+                    <TextBlock Text="&#xE73E;" Style="{StaticResource Icon}" Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}" FontSize="20" />
+                </Border>
+                <StackPanel Margin="16,0" VerticalAlignment="Center">
+                    <TextBlock Style="{StaticResource BodyStrong}" FontSize="16">
+                        <Run Text="Paired with " /><Run Text="{Binding Pairing.PairedName, Mode=OneWay}" />
+                    </TextBlock>
+                    <TextBlock Text="It will reconnect by itself whenever both devices are on the same Wi-Fi." Style="{StaticResource Caption}" />
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- ================= pairing -->
+        <Border Style="{StaticResource Card}" Padding="24" Margin="0,0,0,16" Visibility="{Binding Pairing.IsActive, Converter={StaticResource BoolToVis}}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Background="White" CornerRadius="12" Padding="14" Width="248" Height="248" VerticalAlignment="Top">
+                    <Image Source="{Binding Pairing.QrImage}" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+                </Border>
+
+                <StackPanel Grid.Column="1" Margin="28,0,0,0">
+                    <TextBlock Text="Scan with your phone" FontSize="20" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    <TextBlock Text="{Binding Pairing.ExpiresText}" Style="{StaticResource Caption}" Margin="0,2,0,18" />
+
+                    <ItemsControl Margin="0,0,0,12">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate><StackPanel /></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <DockPanel Margin="0,0,0,12">
+                            <Border Width="24" Height="24" CornerRadius="12" Background="{DynamicResource AccentFillColorDefaultBrush}" VerticalAlignment="Top">
+                                <TextBlock Text="1" Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="12" />
+                            </Border>
+                            <TextBlock Margin="12,2,0,0" Style="{StaticResource Body}" Text="Open Strand on your Android phone." />
+                        </DockPanel>
+                        <DockPanel Margin="0,0,0,12">
+                            <Border Width="24" Height="24" CornerRadius="12" Background="{DynamicResource AccentFillColorDefaultBrush}" VerticalAlignment="Top">
+                                <TextBlock Text="2" Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="12" />
+                            </Border>
+                            <TextBlock Margin="12,2,0,0" Style="{StaticResource Body}" Text="Tap &quot;Scan QR code&quot; and point the camera here." />
+                        </DockPanel>
+                        <DockPanel>
+                            <Border Width="24" Height="24" CornerRadius="12" Background="{DynamicResource AccentFillColorDefaultBrush}" VerticalAlignment="Top">
+                                <TextBlock Text="3" Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="12" />
+                            </Border>
+                            <TextBlock Margin="12,2,0,0" Style="{StaticResource Body}" Text="Check that the fingerprint matches, then tap Pair. Scan only once: the code works one time." />
+                        </DockPanel>
+                    </ItemsControl>
+
+                    <TextBlock Text="Network" Style="{StaticResource Caption}" Margin="0,4,0,4" />
+                    <ComboBox ItemsSource="{Binding Pairing.Addresses}" SelectedItem="{Binding Pairing.SelectedAddress}" Width="220" HorizontalAlignment="Left" />
+
+                    <TextBlock Text="PC fingerprint (SHA-256)" Style="{StaticResource Caption}" Margin="0,16,0,4" />
+                    <TextBlock Text="{Binding Pairing.Fingerprint}" Style="{StaticResource Mono}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+
+                    <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                        <Button Command="{Binding Pairing.CopyCommand}" Margin="0,0,8,0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE8C8;" Style="{StaticResource Icon}" FontSize="12" Margin="0,0,8,0" />
+                                <TextBlock Text="Copy pairing code" />
+                            </StackPanel>
+                        </Button>
+                        <Button Content="Cancel" Command="{Binding Pairing.CancelCommand}" />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ================= device list -->
+        <TextBlock Text="Paired devices" Style="{StaticResource SectionHeader}" Margin="2,0,0,8" />
+
+        <Border Padding="32">
+            <Border.Style>
+                <Style TargetType="Border" BasedOn="{StaticResource Card}">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Devices.Count}" Value="0">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <StackPanel HorizontalAlignment="Center">
+                <TextBlock Text="&#xE8EA;" Style="{StaticResource Icon}" FontSize="32" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                <TextBlock Text="No phones yet" Style="{StaticResource BodyStrong}" HorizontalAlignment="Center" Margin="0,12,0,4" />
+                <TextBlock Text="Pair your Android phone to start syncing." Style="{StaticResource Caption}" HorizontalAlignment="Center" />
+            </StackPanel>
+        </Border>
+
+        <ItemsControl ItemsSource="{Binding Devices}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border Style="{StaticResource Card}">
+                        <DockPanel>
+                            <Button DockPanel.Dock="Right" Command="{Binding ForgetCommand}" VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE74D;" Style="{StaticResource Icon}" FontSize="12" Margin="0,0,8,0" />
+                                    <TextBlock Text="Forget" />
+                                </StackPanel>
+                            </Button>
+                            <Border Style="{StaticResource IconTile}" Width="48" Height="48" VerticalAlignment="Center">
+                                <TextBlock Text="&#xE8EA;" Style="{StaticResource Icon}" FontSize="22" Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" />
+                            </Border>
+                            <StackPanel Margin="16,0" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Name}" Style="{StaticResource BodyStrong}" FontSize="15" />
+                                <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                    <Ellipse Margin="0,0,8,0">
+                                        <Ellipse.Style>
+                                            <Style TargetType="Ellipse" BasedOn="{StaticResource Dot}">
+                                                <Setter Property="Fill" Value="{DynamicResource TextFillColorTertiaryBrush}" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsOnline}" Value="True">
+                                                        <Setter Property="Fill" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Ellipse.Style>
+                                    </Ellipse>
+                                    <TextBlock Text="{Binding StatusText}" Style="{StaticResource Caption}" />
+                                </StackPanel>
+                                <TextBlock Text="{Binding PairedText}" Style="{StaticResource Caption}" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="0,2,0,0" />
+                            </StackPanel>
+                        </DockPanel>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </StackPanel>
+</UserControl>

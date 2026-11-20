@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Strand</string>
+    <string name="send_to_pc">Send to PC</string>
+    <string name="channel_name">Sync connection</string>
+    <string name="quickdrop_to_pc">QuickDrop to PC</string>
+    <string name="copy_detector_label">Strand: auto-send copied text</string>
+    <string name="copy_detector_description">Sends text you copy to your paired PC automatically. Strand only watches for signs of a copy (Android\'s clipboard preview, or a tap on a Copy button), then reads the copied text once and sends it over your Wi-Fi. It doesn\'t read what\'s on your screen, and nothing leaves your local network.</string>
+</resources>
